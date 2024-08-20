@@ -1,0 +1,6 @@
+/.venv*
+__pycache__
+/.pytest_cache
+/build
+/dist
+/src/flitter_kinect.egg-info
