@@ -27,6 +27,9 @@ uniform sampler2D depth_frame;
 uniform int mode;
 uniform float near;
 uniform float far;
+uniform float near_value;
+uniform float far_value;
+uniform float invalid_value;
 uniform bool flip_x;
 uniform bool flip_y;
 
@@ -34,13 +37,14 @@ void main() {
     vec2 inverted = vec2(flip_x ? 1.0 - coord.x : coord.x, flip_y ? coord.y : 1.0 - coord.y);
     vec3 rgb = texture(color_frame, inverted).rgb;
     float d = texture(depth_frame, inverted).r;
-    float a = d == 0.0 ? 0.0 : 1.0 - (clamp(d, near, far) - near) / (far - near);
+    float a = (d - near) / (far - near);
+    a = d < near || d > far ? invalid_value : a * far_value + (1.0 - a) * near_value;
     if (mode == 0) {
-        color = vec4(rgb * a, a);
+        color = vec4(rgb, a);
     } else if (mode == 1) {
         color = vec4(rgb, 1.0);
     } else if (mode == 2) {
-        color = vec4(a, a, a, a);
+        color = vec4(a, a, a, 1.0);
     }
 }"""
 
@@ -139,4 +143,4 @@ class Kinect(Shader):
                 self._depth_texture.swizzle = swizzle
                 logger.debug("Create {}x{} kinect depth texture", depth_frame.width, depth_frame.height)
             self._depth_texture.write(depth_frame.data)
-        super().render(node, mode=mode, near=500, far=4500, flip_x=False, flip_y=False, **kwargs)
+        super().render(node, mode=mode, near=500, far=4500, near_value=1, far_value=0, invalid_value=0, flip_x=False, flip_y=False, **kwargs)
