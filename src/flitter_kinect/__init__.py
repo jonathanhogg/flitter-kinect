@@ -7,7 +7,7 @@ pip3 install git+https://github.com/chris-castillo/freenect2-python.git
 import threading
 import os; os.environ['LIBFREENECT2_LOGGER_LEVEL'] = "error"  # noqa
 
-from freenect2 import Device, NoDeviceError, FrameType, FrameFormat
+from freenect2 import Device, FrameType, FrameFormat
 from loguru import logger
 from mako.template import Template
 import usb.core
