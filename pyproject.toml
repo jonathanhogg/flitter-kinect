@@ -1,11 +1,11 @@
 [build-system]
-requires = ["setuptools"]
+requires = ["setuptools", "cython", "flitter-lang"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "flitter-kinect"
 version = "1.0"
-description = "A Kinect v2 window render plugin for flitter-lang"
+description = "A Kinect v2 plugin for flitter-lang"
 authors = [
   {name = "Jonathan Hogg", email = "me@jonathanhogg.com"},
 ]
@@ -55,6 +55,12 @@ kinect = "flitter_kinect.mesh:Kinect"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+"*" = ["*.lark", "*.pxd", "*.glsl", "*.frag", "*.vert"]
+
+[tool.cibuildwheel]
+skip = ["pp*", "*_i686", "*-win32"]
 
 [tool.cython-lint]
 max-line-length = 160

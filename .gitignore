@@ -1,6 +1,13 @@
 /.venv*
 __pycache__
 /.pytest_cache
+/.coverage
+/coverage.json
+/htmlcov
 /build
 /dist
 /src/flitter_kinect.egg-info
+/src/**/*.c
+/src/**/*.html
+/src/**/*.so
+/src/**/*.pyd
