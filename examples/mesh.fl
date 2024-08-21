@@ -1,0 +1,8 @@
+
+!window size=1920;1080
+    !canvas3d far=5 viewpoint=0 focus=0;0;-4.5 fov=60/360 fov_ref=:vertical
+        !light color=0.9 direction=0;0;-1
+        !light color=0.1
+        !material color=1
+            !transform rotate_z=0.5
+                !kinect

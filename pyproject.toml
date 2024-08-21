@@ -37,7 +37,9 @@ dependencies = [
     "freenect2",
     "loguru",
     "Mako",
+    "numpy",
     "pyusb",
+    "trimesh",
 ]
 
 [project.urls]
@@ -46,7 +48,10 @@ Repository = "https://github.com/jonathanhogg/flitter-kinect.git"
 Issues = "https://github.com/jonathanhogg/flitter-kinect/issues"
 
 [project.entry-points."flitter.render.window"]
-kinect = "flitter_kinect:Kinect"
+kinect = "flitter_kinect.shader:Kinect"
+
+[project.entry-points."flitter.render.window.models"]
+kinect = "flitter_kinect.mesh:Kinect"
 
 [tool.setuptools.packages.find]
 where = ["src"]
