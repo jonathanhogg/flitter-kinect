@@ -7,7 +7,7 @@ import numpy as np
 import trimesh
 
 from libc.math cimport isnan
-from libc.stdint cimport int64_t, uint32_t
+from libc.stdint cimport uint32_t
 
 from flitter.render.window.models cimport Model
 
