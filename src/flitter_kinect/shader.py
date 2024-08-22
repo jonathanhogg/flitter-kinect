@@ -37,7 +37,7 @@ void main() {
     a = isnan(d) || d < near || d > far ? invalid_value : a * far_value + (1.0 - a) * near_value;
     if (mode == 0) {
         color = vec4(rgb, a);
-    } else if (mode == 1) {
+    } else if (mode == 1 || mode == 3) {
         color = vec4(rgb, 1.0);
     } else if (mode == 2) {
         color = vec4(a, a, a, 1.0);
@@ -82,7 +82,7 @@ class Kinect(Shader):
         pass
 
     def render(self, node, **kwargs):
-        mode = {'color': 1, 'depth': 2}.get(node.get('output', 1, str, 'combined'), 0)
+        mode = {'color': 1, 'depth': 2, 'registered': 3}.get(node.get('output', 1, str, 'combined'), 0)
         with self._kinect_device:
             if mode == 1:
                 depth_frame = None
@@ -90,10 +90,13 @@ class Kinect(Shader):
             elif mode == 2:
                 depth_frame = self._kinect_device.get_depth_frame()
                 color_frame = None
+            elif mode == 3:
+                depth_frame = None
+                color_frame = self._kinect_device.get_registered_color_frame()
             else:
                 depth_frame = self._kinect_device.get_undistorted_depth_frame()
                 color_frame = self._kinect_device.get_registered_color_frame()
-        if mode in (0, 1) and color_frame is not None:
+        if mode in (0, 1, 3) and color_frame is not None:
             if self._color_texture is None or self._color_texture.size != (color_frame.width, color_frame.height):
                 components, dtype, swizzle = self.TEXTURE_PARAMS[color_frame.format]
                 self._color_texture = self.glctx.texture((color_frame.width, color_frame.height), components, dtype=dtype)

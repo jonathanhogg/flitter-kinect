@@ -2,13 +2,14 @@
 %pragma tempo 60
 
 !window size=1280;720
+    !kinect id=:color hidden=true output=:registered
     !record filename=OUTPUT codec=:h264
         !canvas3d samples=4 near=0.1 far=5 viewpoint=sin(beat/30);0;0 focus=0;0;-4.5 fov=60/360 fov_ref=:vertical --fog_min=3 fog_max=4.25 fog_curve=0.5
             -- !light color=0.9 direction=0;0;-1
             !transform translate=0;0;-3 rotate_y=beat/15
                 !light position=0;0;0.75 color=0.1 radius=0.05
                 !sphere position=0;0;0.75 emissive=2 size=0.05
-            !material color=1
+            !material color=1 texture_id=:color
                 !transform rotate_z=0.5
                     !kinect average=3 tear=0.1
             -- !material color=1

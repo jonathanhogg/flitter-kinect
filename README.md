@@ -23,9 +23,10 @@ The additional nodes provided by this plugin are:
 This provides access to the raw frames from the Kinect as an image. In addition
 to the standard attributes (`size`, etc.), it supports the following:
 
-`output=` [ `:color` | `:depth` | :`combined` ]
+`output=` [ `:color` | `:depth` | `:registered` | :`combined` ]
 : Whether to output the raw frame from the color camera, the raw frame from the
-depth camera, or a combined image. The default is `:combined`.
+depth camera, the registered color image or a combined image. The default is
+`:combined`.
 
 `flip_x=` [ `true` | `false` ]
 : Whether to flip the image horizontally. Default is `false`.
@@ -60,10 +61,11 @@ values between `near_value` and `far_value`, with the value being
 In `:color` output mode, the result image will be the 1920x1080 color frame as
 received from the Kinect visible light camera.
 
-For `:combined` output, the color image will be cropped and aligned to the
-undistorted depth camera's view. The A channel will contain the depth value, as
-described above, and the RGB channels will contain the matching color from the
-visible light camera. The RGB channels are *not* premultiplied by the A channel.
+For `:registered` or `:combined` output, the color image will be cropped and
+aligned to the undistorted depth camera's view. With `:combined`, the A channel
+will contain the depth value, as described above. The RGB channels will *not*
+be premultiplied by this value (it's not a real alpha). With `:registered`, the
+A channel will be 1.
 
 The `!kinect` window node can be used multiple times in a view without problem.
 Each will show data from the same device.
@@ -99,3 +101,7 @@ closer than this will be considered invalid.
 `far=` *DISTANCE*
 : A far clip-plane, measured in (positive) metres from the camera. Points
 further than this will be considered invalid.
+
+The surface has UV coordinates matching the `:registered` color output of the
+camera (as described above) and therefore the color camera output can be
+texture mapped onto the surface.

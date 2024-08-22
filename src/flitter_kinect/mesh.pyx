@@ -28,6 +28,7 @@ cdef class Kinect(Model):
     cdef object device
     cdef list frames
     cdef object last_points
+    cdef object uv
     cdef object model
 
     def __init__(self, name):
@@ -82,7 +83,7 @@ cdef class Kinect(Model):
         cdef float[:, :, :] A = averaged
         cdef const float[:, :, :] B
         cdef uint32_t[:, :] counts = np.zeros((rows, cols), np.uint32)
-        cdef float a, b, near=-self.near_distance, far=-self.far_distance
+        cdef float near=-self.near_distance, far=-self.far_distance
         for i in range(n):
             B = self.frames[i]
             for row in range(rows):
@@ -183,10 +184,21 @@ cdef class Kinect(Model):
                 normals[i][2] /= c
         if n == 0:
             return None
+        cdef float[:, :] uv
+        if self.uv is None:
+            self.uv = np.empty((m, 2), np.float32)
+            uv = self.uv
+            for row in range(rows):
+                for col in range(cols):
+                    a = row * cols + col
+                    uv[a][0] = col / <float>cols
+                    uv[a][1] = 1 - row / <float>rows
         if self.model is not None:
             self.model.vertices = vertices_array
             self.model.faces = faces_array[:n]
             self.model.vertex_normals = normals_array
         else:
-            self.model = trimesh.Trimesh(vertices=vertices_array, vertex_normals=normals_array, faces=faces_array[:n], process=False, validate=False)
+            visual = trimesh.visual.texture.TextureVisuals(uv=self.uv)
+            self.model = trimesh.Trimesh(vertices=vertices_array, vertex_normals=normals_array, faces=faces_array[:n],
+                                         visual=visual, process=False, validate=False)
         return self.model
