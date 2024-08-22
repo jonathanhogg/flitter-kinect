@@ -67,3 +67,35 @@ visible light camera. The RGB channels are *not* premultiplied by the A channel.
 
 The `!kinect` window node can be used multiple times in a view without problem.
 Each will show data from the same device.
+
+# `!canvas3d` model nodes
+
+## `!kinect`
+
+This provides access to the output of the depth camera as a live 3D surface.
+The surface is constructed from the camera's point of view with the camera at
+the origin and the Z axis pointing towards the camera - so the entire surface
+exists on the negative-Z side of the origin, with normals (/windings) on the
+camera side of the surface. The model units are in metres. Invalid depth values
+will translate to holes in the surface.
+
+The node supports the following attributes:
+
+`average=` *NFRAMES*
+: The depth camera output is pretty noisy. Set this to a number (greater than
+1) to average together the last *NFRAMES*. A value of `3` is pretty decent,
+but any higher will cause visible spacetime smearing of any moving objects.
+The default is `1`, i.e., do no averaging.
+
+`tear=` *DISTANCE*
+: Set to a difference in depth (in metres) at which parts of the surface will
+be torn apart instead of joined. This is useful to differentiate near objects
+from far ones. The default is `0`, which means to *not* tear the surface.
+
+`near=` *DISTANCE*
+: A near clip-plane, measured in (positive) metres from the camera. Points
+closer than this will be considered invalid.
+
+`far=` *DISTANCE*
+: A far clip-plane, measured in (positive) metres from the camera. Points
+further than this will be considered invalid.
