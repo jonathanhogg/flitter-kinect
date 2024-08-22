@@ -41,7 +41,7 @@ cdef class Kinect(Model):
         cdef int64_t average_count = max(1, node.get_int('average', 1))
         cdef float tear_distance = max(0, node.get_float('tear', 0))
         cdef float near_distance = max(0, node.get_float('near', 0.5))
-        cdef float far_distance = max(0, node.get_float('far', 5))
+        cdef float far_distance = max(0, node.get_float('far', 4.5))
         cdef str name = f'!kinect({average_count}, {tear_distance:g}, {near_distance:g}, {far_distance:g})'
         cdef Kinect model
         if (model := Model.by_name(name)) is not None:

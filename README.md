@@ -35,12 +35,12 @@ depth camera, the registered color image or a combined image. The default is
 : Whether to flip the image vertically. Default is `false`.
 
 `near=`*DISTANCE*
-: The near clip plane of the depth camera, in millimetres. Depths smaller than
-this will be considered to be invalid. Default is `500`.
+: The near time-of-flight clip sphere of the depth camera, in metres. Depths
+smaller than this will be considered to be invalid. Default is `0.5`.
 
 `far=`*DISTANCE*
-: The far clip plane of the depth camera, in millimetres. Depths larger than
-this will be considered to be invalid. Default is `4500`.
+: The near time-of-flight clip sphere of the depth camera, in metres. Depths
+larger than this will be considered to be invalid. Default is `4.5`.
 
 `near_value=`*VALUE*
 : The output channel value to use for distances at `near`. Default is `1`.
@@ -95,12 +95,12 @@ be torn apart instead of joined. This is useful to differentiate near objects
 from far ones. The default is `0`, which means to *not* tear the surface.
 
 `near=` *DISTANCE*
-: A near clip-plane, measured in (positive) metres from the camera. Points
-closer than this will be considered invalid.
+: A near Z-axis clip-plane, measured in (positive) metres from the camera.
+Points closer than this will be considered invalid. Default is `0.5`.
 
 `far=` *DISTANCE*
-: A far clip-plane, measured in (positive) metres from the camera. Points
-further than this will be considered invalid.
+: A far Z-axis clip-plane, measured in (positive) metres from the camera.
+Points further than this will be considered invalid. Default is `4.5`.
 
 The surface has UV coordinates matching the `:registered` color output of the
 camera (as described above) and therefore the color camera output can be

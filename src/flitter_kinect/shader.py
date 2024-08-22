@@ -32,7 +32,7 @@ uniform bool flip_y;
 void main() {
     vec2 inverted = vec2(flip_x ? 1.0 - coord.x : coord.x, flip_y ? coord.y : 1.0 - coord.y);
     vec3 rgb = texture(color_frame, inverted).rgb;
-    float d = texture(depth_frame, inverted).r;
+    float d = texture(depth_frame, inverted).r / 1000.0;
     float a = (d - near) / (far - near);
     a = isnan(d) || d < near || d > far ? invalid_value : a * far_value + (1.0 - a) * near_value;
     if (mode == 0) {
@@ -114,4 +114,4 @@ class Kinect(Shader):
             if depth_frame is not self._last_depth_frame:
                 self._depth_texture.write(depth_frame.data)
             self._last_depth_frame = depth_frame
-        super().render(node, mode=mode, near=500, far=4500, near_value=1, far_value=0, invalid_value=0, flip_x=False, flip_y=False, **kwargs)
+        super().render(node, mode=mode, near=0.5, far=4.5, near_value=1, far_value=0, invalid_value=0, flip_x=False, flip_y=False, **kwargs)

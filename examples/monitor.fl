@@ -7,5 +7,7 @@ let COLOR=1920;1080
         !kinect size=DEPTH output=:depth
     !transform translate=COLOR*(-0.25;-0.25) scale=0.5
         !kinect size=COLOR output=:color
-    !transform translate=COLOR*(0.25;0) scale=0.5*(COLOR[1]/COLOR[0])*(DEPTH[0]/DEPTH[1]);0.5
+    !transform translate=COLOR*(0.25;0.25) scale=0.5*(COLOR[1]/COLOR[0])*(DEPTH[0]/DEPTH[1]);0.5
+        !kinect size=DEPTH output=:registered
+    !transform translate=COLOR*(0.25;-0.25) scale=0.5*(COLOR[1]/COLOR[0])*(DEPTH[0]/DEPTH[1]);0.5
         !kinect size=DEPTH output=:combined
