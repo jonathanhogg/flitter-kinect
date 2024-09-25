@@ -6,8 +6,8 @@ from freenect2 import FrameFormat
 from loguru import logger
 from mako.template import Template
 
+from flitter.render.window import ProgramNode
 from flitter.render.window.glsl import TemplateLoader
-from flitter.render.window.shaders import Shader
 
 from . import KinectDevice
 
@@ -45,7 +45,7 @@ void main() {
 }"""
 
 
-class Kinect(Shader):
+class Kinect(ProgramNode):
     DEFAULT_FRAGMENT_SOURCE = Template(KINECT_SHADER, lookup=TemplateLoader)
     TEXTURE_PARAMS = {
         FrameFormat.BGRX: (4, 'f1', 'BGR1'),
@@ -78,10 +78,10 @@ class Kinect(Shader):
         self._color_texture = None
         self._depth_texture = None
 
-    async def descend(self, engine, node, **kwargs):
+    async def descend(self, engine, node, references, **kwargs):
         pass
 
-    def render(self, node, **kwargs):
+    def render(self, node, references, **kwargs):
         mode = {'color': 1, 'depth': 2, 'registered': 3}.get(node.get('output', 1, str, 'combined'), 0)
         with self._kinect_device:
             if mode == 1:
@@ -114,4 +114,4 @@ class Kinect(Shader):
             if depth_frame is not self._last_depth_frame:
                 self._depth_texture.write(depth_frame.data)
             self._last_depth_frame = depth_frame
-        super().render(node, mode=mode, near=0.5, far=4.5, near_value=1, far_value=0, invalid_value=0, flip_x=False, flip_y=False, **kwargs)
+        super().render(node, references, mode=mode, near=0.5, far=4.5, near_value=1, far_value=0, invalid_value=0, flip_x=False, flip_y=False, **kwargs)
