@@ -127,7 +127,7 @@ cdef class Kinect(Model):
         cdef uint32_t[:] normal_counts = np.zeros((m,), np.uint32)
         faces_array = np.empty(((rows - 1) * (cols - 1) * 2, 3), np.uint32)
         cdef uint32_t[:, :] faces = faces_array
-        cdef float Ax, Ay, Az, Bx, By, Bz, Nx, Ny, Nz, z1, z2, tear=self.tear_distance
+        cdef float f, g, Ax, Ay, Az, Bx, By, Bz, Nx, Ny, Nz, z1, z2, tear=self.tear_distance
         for row in range(rows):
             for col in range(cols):
                 a = row * cols + col
@@ -179,20 +179,24 @@ cdef class Kinect(Model):
                                 n += 1
         for i in range(m):
             if (c := normal_counts[i]) > 1:
-                normals[i][0] /= c
-                normals[i][1] /= c
-                normals[i][2] /= c
+                f = 1.0 / c
+                normals[i][0] *= f
+                normals[i][1] *= f
+                normals[i][2] *= f
         if n == 0:
             return None
         cdef float[:, :] uv
         if self.uv is None:
             self.uv = np.empty((m, 2), np.float32)
             uv = self.uv
+            f = 1.0 / cols
+            a = 0
             for row in range(rows):
+                g = 1 - row / <float>rows
                 for col in range(cols):
-                    a = row * cols + col
-                    uv[a][0] = col / <float>cols
-                    uv[a][1] = 1 - row / <float>rows
+                    uv[a][0] = col * f
+                    uv[a][1] = g
+                    a += 1
         if self.model is not None:
             self.model.vertices = vertices_array
             self.model.faces = faces_array[:n]

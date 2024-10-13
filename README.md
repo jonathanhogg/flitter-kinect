@@ -23,33 +23,33 @@ The additional nodes provided by this plugin are:
 This provides access to the raw frames from the Kinect as an image. In addition
 to the standard attributes (`size`, etc.), it supports the following:
 
-`output=` [ `:color` | `:depth` | `:registered` | :`combined` ]
-: Whether to output the raw frame from the color camera, the raw frame from the
+- `output=` [ `:color` | `:depth` | `:registered` | :`combined` ] \
+Whether to output the raw frame from the color camera, the raw frame from the
 depth camera, the registered color image or a combined image. The default is
 `:combined`.
 
-`flip_x=` [ `true` | `false` ]
-: Whether to flip the image horizontally. Default is `false`.
+- `flip_x=` [ `true` | `false` ] \
+Whether to flip the image horizontally. Default is `false`.
 
-`flip_y=` [ `true` | `false` ]
-: Whether to flip the image vertically. Default is `false`.
+- `flip_y=` [ `true` | `false` ] \
+Whether to flip the image vertically. Default is `false`.
 
-`near=`*DISTANCE*
-: The near time-of-flight clip sphere of the depth camera, in metres. Depths
+- `near=`*DISTANCE* \
+The near time-of-flight clip sphere of the depth camera, in metres. Depths
 smaller than this will be considered to be invalid. Default is `0.5`.
 
-`far=`*DISTANCE*
-: The near time-of-flight clip sphere of the depth camera, in metres. Depths
+- `far=`*DISTANCE* \
+The near time-of-flight clip sphere of the depth camera, in metres. Depths
 larger than this will be considered to be invalid. Default is `4.5`.
 
-`near_value=`*VALUE*
-: The output channel value to use for distances at `near`. Default is `1`.
+- `near_value=`*VALUE* \
+The output channel value to use for distances at `near`. Default is `1`.
 
-`far_value=`*VALUE*
-: The output channel value to use for distances at `far`. Default is `0`.
+- `far_value=`*VALUE* \
+The output channel value to use for distances at `far`. Default is `0`.
 
-`invalid_value=`*VALUE*
-: The value to use for the depth channel if the distance is nearer than `near`
+- `invalid_value=`*VALUE* \
+The value to use for the depth channel if the distance is nearer than `near`
 or further than `far`. Default is `0`.
 
 In `:depth` output mode, the result will be a 512x424 image with each of the
@@ -83,23 +83,23 @@ will translate to holes in the surface.
 
 The node supports the following attributes:
 
-`average=` *NFRAMES*
-: The depth camera output is pretty noisy. Set this to a number (greater than
-1) to average together the last *NFRAMES*. A value of `3` is pretty decent,
-but any higher will cause visible spacetime smearing of any moving objects.
-The default is `1`, i.e., do no averaging.
+- `average=` *NFRAMES* \
+The depth camera output is pretty noisy. Set this to average together the last
+*NFRAMES*. A value of `3` is pretty decent, but any higher will cause visible
+spacetime smearing of any moving objects. The default is `1`, i.e., do no
+averaging.
 
-`tear=` *DISTANCE*
-: Set to a difference in depth (in metres) at which parts of the surface will
+- `tear=` *DISTANCE* \
+Set to a difference in depth (in metres) at which parts of the surface will
 be torn apart instead of joined. This is useful to differentiate near objects
 from far ones. The default is `0`, which means to *not* tear the surface.
 
-`near=` *DISTANCE*
-: A near Z-axis clip-plane, measured in (positive) metres from the camera.
+- `near=` *DISTANCE* \
+A near Z-axis clip-plane, measured in (positive) metres from the camera.
 Points closer than this will be considered invalid. Default is `0.5`.
 
-`far=` *DISTANCE*
-: A far Z-axis clip-plane, measured in (positive) metres from the camera.
+- `far=` *DISTANCE* \
+A far Z-axis clip-plane, measured in (positive) metres from the camera.
 Points further than this will be considered invalid. Default is `4.5`.
 
 The surface has UV coordinates matching the `:registered` color output of the
