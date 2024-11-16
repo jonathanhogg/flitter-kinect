@@ -63,12 +63,7 @@ class Kinect(ProgramNode):
 
     @property
     def child_textures(self):
-        textures = {}
-        if self._color_texture is not None:
-            textures['color_frame'] = self._color_texture
-        if self._depth_texture is not None:
-            textures['depth_frame'] = self._depth_texture
-        return textures
+        return {'color_frame': self._color_texture, 'depth_frame': self._depth_texture}
 
     def release(self):
         super().release()
