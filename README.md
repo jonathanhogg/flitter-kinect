@@ -35,11 +35,11 @@ Whether to flip the image horizontally. Default is `false`.
 Whether to flip the image vertically. Default is `false`.
 
 - `near=`*DISTANCE* \
-The near time-of-flight clip sphere of the depth camera, in metres. Depths
+The near time-of-flight clip sphere of the depth camera, in metres. Distances
 smaller than this will be considered to be invalid. Default is `0.5`.
 
 - `far=`*DISTANCE* \
-The near time-of-flight clip sphere of the depth camera, in metres. Depths
+The far time-of-flight clip sphere of the depth camera, in metres. Distances
 larger than this will be considered to be invalid. Default is `4.5`.
 
 - `near_value=`*VALUE* \
@@ -53,22 +53,23 @@ The value to use for the depth channel if the distance is nearer than `near`
 or further than `far`. Default is `0`.
 
 In `:depth` output mode, the result will be a 512x424 image with each of the
-RGB channels set to the distance through that pixel and the A channel set to
-`1`. Distances in the range `near` to `far` will be mapped linearly to grey
-values between `near_value` and `far_value`, with the value being
+**RGB** channels set to the distance through that pixel and the **A** channel
+set to `1`. Distances in the range `near` to `far` will be mapped linearly to
+grey values between `near_value` and `far_value`, with the grey value being
 `invalid_value` for distances outside of that distance range.
 
 In `:color` output mode, the result image will be the 1920x1080 color frame as
 received from the Kinect visible light camera.
 
 For `:registered` or `:combined` output, the color image will be cropped and
-aligned to the undistorted depth camera's view. With `:combined`, the A channel
-will contain the depth value, as described above. The RGB channels will *not*
-be premultiplied by this value (it's not a real alpha). With `:registered`, the
-A channel will be 1.
+aligned to the undistorted depth camera's view. With `:combined`, the **A**
+channel will contain the depth value, as described above. The **RGB** channels
+will *not* be premultiplied by this value (it's not a real alpha). With
+`:registered`, the **A** channel will be 1.
 
 The `!kinect` window node can be used multiple times in a view without problem.
-Each will show data from the same device.
+Each will show data from the same device (see the [`monitor.fl`
+example](examples/monitor.fl)).
 
 # `!canvas3d` model nodes
 
@@ -76,10 +77,13 @@ Each will show data from the same device.
 
 This provides access to the output of the depth camera as a live 3D surface.
 The surface is constructed from the camera's point of view with the camera at
-the origin and the Z axis pointing towards the camera - so the entire surface
+the origin and the Z axis pointing towards the camera, so the entire surface
 exists on the negative-Z side of the origin, with normals (/windings) on the
-camera side of the surface. The model units are in metres. Invalid depth values
-will translate to holes in the surface.
+camera side of the surface. There are *no* back faces, so the surface is
+invisible from the far side (unless inverted with `invert=true`). The model
+units are in metres. Invalid depth values will translate to holes in the
+surface. The model will be automatically updated as new depth frames are
+processed (up to 30fps).
 
 The node supports the following attributes:
 
@@ -102,6 +106,10 @@ Points closer than this will be considered invalid. Default is `0.5`.
 A far Z-axis clip-plane, measured in (positive) metres from the camera.
 Points further than this will be considered invalid. Default is `4.5`.
 
+Multiple instances of the `!kinect` model – with different settings – may be
+used in a scene/program (along with instances of the `!kinect` window node).
+They will all use the same underlying data from the device.
+
 The surface has UV coordinates matching the `:registered` color output of the
 camera (as described above) and therefore the color camera output can be
-texture mapped onto the surface.
+texture mapped onto the surface (see the [`mesh.fl` example](examples/mesh.fl).
