@@ -49,35 +49,44 @@ class KinectDevice:
 
     async def run_task(self):
         logger.debug("Searching for a connected Kinect (v2) device")
-        while True:
-            while usb.core.find(idVendor=self.USB_VENDOR, idProduct=self.USB_PRODUCT) is None:
-                await asyncio.sleep(0.1)
-            try:
-                logger.debug("Kinect device found")
-                self._device = freenect2.Device()
-                self._device.start(self._process_frame)
-                self._registration = self._device.registration
-            except Exception:
-                logger.exception("Error trying to start Kinect device")
+        try:
+            while True:
+                while usb.core.find(idVendor=self.USB_VENDOR, idProduct=self.USB_PRODUCT) is None:
+                    await asyncio.sleep(0.1)
+                try:
+                    logger.debug("Kinect device found")
+                    self._device = freenect2.Device()
+                    self._device.start(self._process_frame)
+                    self._registration = self._device.registration
+                except Exception:
+                    logger.exception("Error trying to start Kinect device")
+                    self._device = None
+                    await asyncio.sleep(1)
+                    continue
+                logger.success("Kinect device started")
+                while usb.core.find(idVendor=self.USB_VENDOR, idProduct=self.USB_PRODUCT) is not None:
+                    await asyncio.sleep(1)
+                logger.error("Kinect device disconnected")
+                try:
+                    self._device.stop()
+                    self._device.close()
+                except Exception:
+                    logger.exception("Failed to correctly close Kinect device")
                 self._device = None
-                await asyncio.sleep(1)
-                continue
-            logger.success("Kinect device started")
-            while usb.core.find(idVendor=self.USB_VENDOR, idProduct=self.USB_PRODUCT) is not None:
-                await asyncio.sleep(1)
-            logger.error("Kinect device disconnected")
-            try:
-                self._device.stop()
-                self._device.close()
-            except Exception:
-                logger.exception("Failed to correctly close Kinect device")
-            self._device = None
-            self._registration = None
-            self._color_frame = None
-            self._depth_frame = None
-            self._registered_color_frame = None
-            self._undistorted_depth_frame = None
-            self._points = None
+                self._registration = None
+                self._color_frame = None
+                self._depth_frame = None
+                self._registered_color_frame = None
+                self._undistorted_depth_frame = None
+                self._points = None
+        except asyncio.CancelledError:
+            if self._device is not None:
+                try:
+                    self._device.stop()
+                    self._device.close()
+                    logger.info("Kinect device stopped")
+                except Exception:
+                    logger.exception("Failed to correctly close Kinect device")
 
     def _process_frame(self, frame_type, frame):
         with self._frame_lock:
