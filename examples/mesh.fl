@@ -4,11 +4,11 @@
 let SIZE=(1280;720) if OUTPUT else (1920;1080)
 
 !window size=SIZE
-    !kinect id=:color hidden=true output=:registered
+    !kinect id=:color hidden=true size=512;424 output=:registered
     !record filename=OUTPUT codec=:h264
         !bloom radius=hypot(SIZE)/200
             !canvas3d samples=4 near=0.1 far=5 viewpoint=sin(beat/30);0;0 focus=0;0;-4.5 fov=60/360 fov_ref=:vertical
-                -- !light color=0.9 direction=0;0;-1
+                !light color=0.1 direction=0;-1;-1
                 !transform translate=0;0;-3 rotate_y=beat/15
                     !light position=0;0;0.75 color=0.1 radius=0.05
                     !sphere position=0;0;0.75 emissive=2 size=0.05
